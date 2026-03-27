@@ -285,6 +285,140 @@ tbody td{padding:.62rem .9rem;font-size:.86rem;vertical-align:middle;}
   thead th:nth-child(5),tbody td:nth-child(5){display:none;}
   .je-meta{display:none;}
 }
+
+/* ══════════════════════════════════════════════
+   AGENDA HEBDOMADAIRE DU PRÉFET
+══════════════════════════════════════════════ */
+.agenda-toolbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.8rem 1.5rem;
+  background:rgba(0,0,0,.2);border-bottom:1px solid var(--border);
+  flex-wrap:wrap;gap:.8rem;
+}
+.week-nav{display:flex;align-items:center;gap:.8rem;}
+.week-label{
+  font-family:"Rajdhani",sans-serif;font-weight:700;font-size:1rem;
+  color:var(--white);letter-spacing:1px;min-width:240px;text-align:center;
+}
+.btn-week{background:rgba(255,255,255,.07);border:1px solid var(--border);color:var(--text);
+  padding:.4rem .7rem;border-radius:5px;cursor:pointer;font-size:.9rem;transition:all .2s;}
+.btn-week:hover{background:rgba(255,255,255,.12);color:var(--white);}
+.btn-today{background:rgba(201,162,39,.15);border:1px solid var(--border-gold);color:var(--gold);
+  padding:.4rem .9rem;border-radius:5px;cursor:pointer;font-family:"Rajdhani",sans-serif;
+  font-weight:700;font-size:.8rem;letter-spacing:1px;transition:all .2s;}
+.btn-today:hover{background:rgba(201,162,39,.25);}
+.agenda-type-filter{display:flex;gap:.4rem;flex-wrap:wrap;}
+.type-pill{padding:.3rem .75rem;border-radius:20px;border:1px solid var(--border);
+  background:rgba(255,255,255,.05);color:var(--text);cursor:pointer;
+  font-family:"Rajdhani",sans-serif;font-weight:700;font-size:.72rem;letter-spacing:.8px;
+  transition:all .2s;}
+.type-pill.active{border-color:var(--gold);background:rgba(201,162,39,.12);color:var(--gold);}
+
+/* SEMAINIER GRID */
+.semainier{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:0;
+  border:1px solid var(--border);
+  border-radius:10px;
+  overflow:hidden;
+  margin:1.25rem 1.5rem;
+}
+.day-col{
+  border-right:1px solid var(--border);
+  min-height:520px;
+  display:flex;flex-direction:column;
+}
+.day-col:last-child{border-right:none;}
+.day-header{
+  padding:.6rem .5rem;
+  text-align:center;
+  border-bottom:1px solid var(--border);
+  background:rgba(255,255,255,.03);
+  position:sticky;top:0;z-index:1;
+}
+.day-header.today-header{
+  background:rgba(201,162,39,.1);
+  border-bottom-color:var(--gold);
+}
+.day-name{font-family:"Rajdhani",sans-serif;font-weight:700;font-size:.75rem;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.5);}
+.day-num{font-family:"Rajdhani",sans-serif;font-weight:700;font-size:1.5rem;color:var(--white);line-height:1;}
+.day-num.today-num{
+  background:var(--gold);color:var(--navy);
+  width:32px;height:32px;border-radius:50%;
+  display:inline-flex;align-items:center;justify-content:center;
+  font-size:1.1rem;
+}
+.day-body{
+  flex:1;padding:.4rem;
+  display:flex;flex-direction:column;gap:.3rem;
+}
+.day-add-btn{
+  margin:.3rem;padding:.35rem;
+  border:1px dashed rgba(255,255,255,.12);
+  border-radius:5px;background:none;cursor:pointer;
+  color:rgba(255,255,255,.2);font-size:.8rem;
+  transition:all .2s;text-align:center;
+  font-family:"Rajdhani",sans-serif;font-weight:600;
+}
+.day-add-btn:hover{border-color:rgba(201,162,39,.4);color:var(--gold);background:rgba(201,162,39,.05);}
+
+/* ACTIVITÉ CARD */
+.acti-card{
+  border-radius:5px;padding:.45rem .5rem;
+  cursor:pointer;transition:all .2s;
+  border-left:3px solid var(--ac-color,var(--gold));
+  background:var(--ac-bg,rgba(201,162,39,.08));
+  position:relative;
+}
+.acti-card:hover{filter:brightness(1.15);transform:translateY(-1px);}
+.acti-card.past{opacity:.45;}
+.acti-card.now{box-shadow:0 0 0 2px var(--ac-color,var(--gold));animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 2px var(--ac-color)}50%{box-shadow:0 0 0 4px var(--ac-color),0 0 12px var(--ac-color)}}
+.acti-time{font-family:"Rajdhani",sans-serif;font-weight:700;font-size:.68rem;
+  color:var(--ac-color,var(--gold));letter-spacing:.5px;}
+.acti-title{font-size:.78rem;font-weight:600;color:var(--white);line-height:1.3;margin-top:.1rem;}
+.acti-lieu{font-size:.67rem;color:rgba(255,255,255,.45);margin-top:.1rem;}
+.acti-del-btn{position:absolute;top:.25rem;right:.3rem;background:none;border:none;
+  cursor:pointer;color:rgba(255,255,255,.2);font-size:.7rem;opacity:0;transition:opacity .2s;}
+.acti-card:hover .acti-del-btn{opacity:1;}
+.acti-del-btn:hover{color:var(--absent);}
+
+/* REMINDER BANNER */
+.reminder-banner{
+  margin:0 1.5rem .5rem;
+  background:rgba(201,162,39,.08);border:1px solid rgba(201,162,39,.25);
+  border-radius:8px;padding:.75rem 1.1rem;
+  display:flex;align-items:flex-start;gap:.8rem;flex-wrap:wrap;
+}
+.reminder-banner.hidden{display:none;}
+.rb-icon{font-size:1.3rem;flex-shrink:0;}
+.rb-content{flex:1;}
+.rb-title{font-family:"Rajdhani",sans-serif;font-weight:700;font-size:.8rem;letter-spacing:1px;color:var(--gold);text-transform:uppercase;margin-bottom:.3rem;}
+.rb-items{display:flex;flex-direction:column;gap:.25rem;}
+.rb-item{font-size:.82rem;color:var(--text);display:flex;align-items:center;gap:.5rem;}
+.rb-item .ri-time{font-family:"Rajdhani",sans-serif;font-weight:700;font-size:.78rem;color:var(--gold);min-width:45px;}
+.rb-item .ri-now{background:rgba(239,68,68,.15);color:var(--absent);border:1px solid rgba(239,68,68,.3);
+  padding:.05rem .4rem;border-radius:10px;font-size:.65rem;font-family:"Rajdhani",sans-serif;font-weight:700;}
+
+/* MODAL ACTIVITÉ */
+.type-selector{display:flex;flex-wrap:wrap;gap:.45rem;}
+.type-sel-btn{padding:.35rem .75rem;border-radius:5px;border:1px solid rgba(255,255,255,.14);
+  background:rgba(255,255,255,.05);color:var(--text);cursor:pointer;
+  font-family:"Rajdhani",sans-serif;font-weight:700;font-size:.75rem;letter-spacing:.8px;transition:all .2s;}
+
+/* MOBILE AGENDA */
+@media(max-width:900px){
+  .semainier{grid-template-columns:repeat(4,1fr);margin:1rem;}
+  .day-col:nth-child(n+5){display:none;}
+}
+@media(max-width:600px){
+  .semainier{grid-template-columns:1fr 1fr 1fr;margin:.75rem;}
+  .day-col:nth-child(n+4){display:none;}
+  .agenda-toolbar{padding:.65rem 1rem;}
+  .week-label{min-width:160px;font-size:.85rem;}
+}
+
 </style>
 </head>
 <body>
@@ -306,6 +440,7 @@ tbody td{padding:.62rem .9rem;font-size:.86rem;vertical-align:middle;}
 <!-- NAVIGATION -->
 <div class="nav-tabs">
   <div class="nav-tab active" id="tab-personnel" onclick="switchTab('personnel')">👥 PERSONNEL</div>
+  <div class="nav-tab" id="tab-agenda" onclick="switchTab('agenda')">📅 AGENDA PRÉFET <span class="tab-badge" id="agendaBadge">0</span></div>
   <div class="nav-tab" id="tab-journal" onclick="switchTab('journal')">📋 JOURNAL QUOTIDIEN <span class="tab-badge" id="journalBadge">0</span></div>
 </div>
 
@@ -399,6 +534,94 @@ tbody td{padding:.62rem .9rem;font-size:.86rem;vertical-align:middle;}
     </div>
   </div>
   <div class="journal-list" id="journalList"></div>
+</div>
+
+
+<!-- ═══ PAGE AGENDA ═══ -->
+<div class="page" id="page-agenda">
+
+  <!-- Rappels du jour -->
+  <div class="reminder-banner hidden" id="reminderBanner">
+    <div class="rb-icon">🔔</div>
+    <div class="rb-content">
+      <div class="rb-title">Rappels — Activités du Préfet aujourd'hui</div>
+      <div class="rb-items" id="reminderItems"></div>
+    </div>
+  </div>
+
+  <!-- Toolbar semaine -->
+  <div class="agenda-toolbar">
+    <div class="week-nav">
+      <button class="btn-week" onclick="changeWeek(-1)">&#8249;</button>
+      <div class="week-label" id="weekLabel">—</div>
+      <button class="btn-week" onclick="changeWeek(1)">&#8250;</button>
+      <button class="btn-today" onclick="goToday()">AUJOURD'HUI</button>
+    </div>
+    <div class="agenda-type-filter" id="typeFilter"></div>
+    <button class="btn btn-outline" onclick="exportAgendaCSV()">⬇ EXPORTER SEMAINE</button>
+  </div>
+
+  <!-- Grille semainière -->
+  <div class="semainier" id="semainier"></div>
+
+</div>
+
+
+<!-- MODAL ACTIVITÉ AGENDA -->
+<div class="modal-overlay" id="agendaModalOverlay" style="display:none" onclick="closeAgendaModal()">
+  <div class="modal" onclick="event.stopPropagation()" style="max-width:480px;">
+    <div class="modal-header">
+      <h3 id="agendaModalTitle">NOUVELLE ACTIVITÉ</h3>
+      <button class="btn-close" onclick="closeAgendaModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group full">
+          <label>Titre de l'activité *</label>
+          <input type="text" id="ag_titre" placeholder="Ex: Réunion de commandement, Visite de terrain…">
+        </div>
+        <div class="form-group">
+          <label>Date</label>
+          <input type="date" id="ag_date">
+        </div>
+        <div class="form-group">
+          <label>Heure</label>
+          <input type="time" id="ag_heure">
+        </div>
+        <div class="form-group">
+          <label>Heure de fin</label>
+          <input type="time" id="ag_heure_fin">
+        </div>
+        <div class="form-group">
+          <label>Lieu</label>
+          <input type="text" id="ag_lieu" placeholder="Salle, bâtiment, ville…">
+        </div>
+        <div class="form-group full">
+          <label>Type d'activité</label>
+          <div class="type-selector" id="typeSelector"></div>
+        </div>
+        <div class="form-group full">
+          <label>Description / Notes</label>
+          <textarea class="rf-textarea" id="ag_desc" placeholder="Ordre du jour, participants, documents à préparer…" style="min-height:70px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:.5rem .75rem;color:#eef2f7;font-family:Source Sans 3,sans-serif;font-size:.88rem;outline:none;resize:vertical;"></textarea>
+        </div>
+        <div class="form-group full">
+          <label>Rappel avant l'activité</label>
+          <select id="ag_rappel" class="rf-select" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:.5rem .75rem;color:#eef2f7;font-family:Source Sans 3,sans-serif;font-size:.88rem;outline:none;">
+            <option value="0">Pas de rappel</option>
+            <option value="15" selected>15 minutes avant</option>
+            <option value="30">30 minutes avant</option>
+            <option value="60">1 heure avant</option>
+            <option value="120">2 heures avant</option>
+            <option value="1440">La veille</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeAgendaModal()">ANNULER</button>
+      <button class="btn-save" onclick="saveActivite()">ENREGISTRER</button>
+    </div>
+  </div>
 </div>
 
 <!-- MODAL AGENT -->
@@ -515,6 +738,7 @@ function switchTab(tab){
   document.getElementById('tab-'+tab).classList.add('active');
   document.getElementById('page-'+tab).classList.add('active');
   if(tab==='journal'){initJournalForm();renderJournal();}
+  if(tab==='agenda'){if(!currentWeekStart)currentWeekStart=getMondayOf(new Date());renderAgenda();}
 }
 
 // ── SNAPSHOT BUILDER ─────────────────────────────────────────────────────────
@@ -897,7 +1121,254 @@ function notify(msg){
 }
 
 // ── INIT ─────────────────────────────────────────────────────────────────────
-loadData();renderDashboard();renderTable();
+loadData();loadAgenda();renderDashboard();renderTable();
+
+// ══════════════════════════════════════════
+// AGENDA DU PRÉFET
+// ══════════════════════════════════════════
+const AGENDA_TYPES = [
+  {key:'reunion',   label:'Réunion',        color:'#3b82f6', icon:'🤝'},
+  {key:'ceremonie', label:'Cérémonie',       color:'#c9a227', icon:'🎖️'},
+  {key:'visite',    label:'Visite terrain',  color:'#22c55e', icon:'🚢'},
+  {key:'formation', label:'Formation',       color:'#a855f7', icon:'📚'},
+  {key:'mission',   label:'Mission',         color:'#f97316', icon:'✈️'},
+  {key:'audience',  label:'Audience',        color:'#3dd6f5', icon:'🏛️'},
+  {key:'autre',     label:'Autre',           color:'#6b7280', icon:'📌'},
+];
+const ATYPE = {};
+AGENDA_TYPES.forEach(t => ATYPE[t.key] = t);
+
+let agenda = [];          // activités
+let currentWeekStart = null; // lundi de la semaine affichée
+let agendaEditId = null;
+let agendaTargetDate = null; // date cliquée pour ajouter
+let selectedType = 'reunion';
+let activeTypeFilter = '';
+let reminderTimer = null;
+
+function loadAgenda(){
+  try{ const a = localStorage.getItem('premar_agenda_v1'); agenda = a ? JSON.parse(a) : []; }
+  catch(e){ agenda = []; }
+}
+function saveAgenda(){ try{ localStorage.setItem('premar_agenda_v1', JSON.stringify(agenda)); }catch(e){} }
+
+// ── WEEK UTILITIES ───────────────────────────────────────────────────────────
+function getMondayOf(d){
+  const dt = new Date(d);
+  const day = dt.getDay();
+  const diff = (day === 0) ? -6 : 1 - day;
+  dt.setDate(dt.getDate() + diff);
+  dt.setHours(0,0,0,0);
+  return dt;
+}
+function dateStr(d){ return d.toISOString().slice(0,10); }
+function addDays(d,n){ const r=new Date(d); r.setDate(r.getDate()+n); return r; }
+function fmtShort(d){ const [y,mo,j]=d.split('-'); const M=['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc']; return `${parseInt(j)} ${M[parseInt(mo)-1]}`; }
+function fmtLong(d){ const [y,mo,j]=d.split('-'); const M=['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre']; return `${parseInt(j)} ${M[parseInt(mo)-1]} ${y}`; }
+
+function goToday(){ currentWeekStart = getMondayOf(new Date()); renderAgenda(); }
+function changeWeek(n){ currentWeekStart = addDays(currentWeekStart, n*7); renderAgenda(); }
+
+// ── TYPE FILTER BAR ──────────────────────────────────────────────────────────
+function renderTypeFilter(){
+  document.getElementById('typeFilter').innerHTML =
+    `<div class="type-pill${!activeTypeFilter?' active':''}" onclick="setTypeFilter('')">Tous</div>` +
+    AGENDA_TYPES.map(t =>
+      `<div class="type-pill${activeTypeFilter===t.key?' active':''}" onclick="setTypeFilter('${t.key}')" style="${activeTypeFilter===t.key?`background:${t.color}22;color:${t.color};border-color:${t.color}66`:''}">${t.icon} ${t.label}</div>`
+    ).join('');
+}
+function setTypeFilter(k){ activeTypeFilter=k; renderAgenda(); }
+
+// ── REMINDERS ────────────────────────────────────────────────────────────────
+function checkReminders(){
+  const now = new Date();
+  const todayS = dateStr(now);
+  const todayActs = agenda.filter(a => a.date === todayS && a.heure);
+  if(!todayActs.length){ document.getElementById('reminderBanner').classList.add('hidden'); return; }
+
+  const items = [];
+  todayActs.sort((a,b)=>a.heure.localeCompare(b.heure)).forEach(a => {
+    const [h,mi] = a.heure.split(':').map(Number);
+    const actTime = new Date(now); actTime.setHours(h,mi,0,0);
+    const diff = (actTime - now)/60000; // minutes
+    const rappel = parseInt(a.rappel||15);
+    const isNow = diff >= -15 && diff <= 0;
+    const isSoon = diff > 0 && diff <= rappel;
+    const isPast = diff < -15;
+    if(!isPast){
+      const t = ATYPE[a.type]||ATYPE.autre;
+      items.push(`<div class="rb-item">
+        <span class="ri-time">${a.heure}</span>
+        <span style="color:${t.color}">${t.icon}</span>
+        <span>${a.titre}${a.lieu?' — <span style="opacity:.6">'+a.lieu+'</span>':''}</span>
+        ${isNow?'<span class="ri-now">EN COURS</span>':isSoon?`<span class="ri-now" style="color:#f97316;border-color:rgba(249,115,22,.3);background:rgba(249,115,22,.1)">dans ${Math.round(diff)} min</span>`:''}
+      </div>`);
+    }
+  });
+
+  const banner = document.getElementById('reminderBanner');
+  if(items.length){
+    banner.classList.remove('hidden');
+    document.getElementById('reminderItems').innerHTML = items.join('');
+  } else {
+    banner.classList.add('hidden');
+  }
+}
+
+// ── RENDER SEMAINIER ─────────────────────────────────────────────────────────
+function renderAgenda(){
+  if(!currentWeekStart) currentWeekStart = getMondayOf(new Date());
+  renderTypeFilter();
+  checkReminders();
+
+  const todayS = dateStr(new Date());
+  const days = Array.from({length:7},(_,i)=>addDays(currentWeekStart,i));
+  const JOURS = ['LUN','MAR','MER','JEU','VEN','SAM','DIM'];
+
+  // Week label
+  const ws = dateStr(days[0]); const we = dateStr(days[6]);
+  document.getElementById('weekLabel').textContent = `${fmtShort(ws)} — ${fmtShort(we)} ${days[0].getFullYear()}`;
+
+  // Badge
+  const weekActs = agenda.filter(a => a.date >= ws && a.date <= we);
+  document.getElementById('agendaBadge').textContent = agenda.length;
+
+  // Build grid
+  let html = '';
+  days.forEach((d,i) => {
+    const ds = dateStr(d);
+    const isToday = ds === todayS;
+    let acts = agenda.filter(a => a.date === ds);
+    if(activeTypeFilter) acts = acts.filter(a => a.type === activeTypeFilter);
+    acts.sort((a,b)=>(a.heure||'').localeCompare(b.heure||''));
+
+    html += `<div class="day-col">
+      <div class="day-header${isToday?' today-header':''}">
+        <div class="day-name">${JOURS[i]}</div>
+        <div class="day-num${isToday?' today-num':''}">${d.getDate()}</div>
+      </div>
+      <div class="day-body">
+        ${acts.map(a => renderActiCard(a, ds, todayS)).join('')}
+        <button class="day-add-btn" onclick="openAgendaModal('${ds}')">+ Ajouter</button>
+      </div>
+    </div>`;
+  });
+  document.getElementById('semainier').innerHTML = html;
+}
+
+function renderActiCard(a, ds, todayS){
+  const t = ATYPE[a.type] || ATYPE.autre;
+  const now = new Date();
+  let cls = '';
+  if(ds < todayS) cls = 'past';
+  else if(ds === todayS && a.heure){
+    const [h,mi] = a.heure.split(':').map(Number);
+    const actTime = new Date(now); actTime.setHours(h,mi,0,0);
+    const diff = (actTime-now)/60000;
+    if(diff >= -30 && diff <= 0) cls = 'now';
+  }
+  return `<div class="acti-card ${cls}" style="--ac-color:${t.color};--ac-bg:${t.color}14" onclick="openAgendaModal('${ds}','${a.id}')">
+    <button class="acti-del-btn" onclick="event.stopPropagation();deleteActivite('${a.id}')">✕</button>
+    ${a.heure?`<div class="acti-time">${t.icon} ${a.heure}${a.heure_fin?' – '+a.heure_fin:''}</div>`:`<div class="acti-time">${t.icon} ${t.label}</div>`}
+    <div class="acti-title">${a.titre}</div>
+    ${a.lieu?`<div class="acti-lieu">📍 ${a.lieu}</div>`:''}
+  </div>`;
+}
+
+// ── MODAL ACTIVITÉ ───────────────────────────────────────────────────────────
+function buildTypeSelector(){
+  document.getElementById('typeSelector').innerHTML = AGENDA_TYPES.map(t =>
+    `<button class="type-sel-btn" id="tsel-${t.key}" onclick="pickType('${t.key}')"
+      style="${selectedType===t.key?`background:${t.color}22;color:${t.color};border-color:${t.color}`:''}"
+    >${t.icon} ${t.label}</button>`
+  ).join('');
+}
+function pickType(k){
+  selectedType=k;
+  document.querySelectorAll('.type-sel-btn').forEach(b=>{ b.style.background=''; b.style.color=''; b.style.borderColor=''; });
+  const t=ATYPE[k]; const btn=document.getElementById('tsel-'+k);
+  if(btn){ btn.style.background=t.color+'22'; btn.style.color=t.color; btn.style.borderColor=t.color; }
+}
+
+function openAgendaModal(date, id){
+  agendaEditId = id||null;
+  agendaTargetDate = date;
+  document.getElementById('agendaModalTitle').textContent = id ? "MODIFIER L'ACTIVITÉ" : "NOUVELLE ACTIVITÉ";
+  if(id){
+    const a = agenda.find(x=>x.id===id);
+    document.getElementById('ag_titre').value = a.titre||'';
+    document.getElementById('ag_date').value = a.date||date;
+    document.getElementById('ag_heure').value = a.heure||'';
+    document.getElementById('ag_heure_fin').value = a.heure_fin||'';
+    document.getElementById('ag_lieu').value = a.lieu||'';
+    document.getElementById('ag_desc').value = a.desc||'';
+    document.getElementById('ag_rappel').value = a.rappel||'15';
+    selectedType = a.type||'reunion';
+  } else {
+    ['ag_titre','ag_lieu','ag_desc'].forEach(i=>document.getElementById(i).value='');
+    document.getElementById('ag_date').value = date;
+    document.getElementById('ag_heure').value = '';
+    document.getElementById('ag_heure_fin').value = '';
+    document.getElementById('ag_rappel').value = '15';
+    selectedType = 'reunion';
+  }
+  buildTypeSelector();
+  document.getElementById('agendaModalOverlay').style.display='flex';
+}
+function closeAgendaModal(){ document.getElementById('agendaModalOverlay').style.display='none'; }
+
+function saveActivite(){
+  const titre = document.getElementById('ag_titre').value.trim();
+  if(!titre){ alert('Le titre est obligatoire.'); return; }
+  const d = {
+    titre, date: document.getElementById('ag_date').value || agendaTargetDate,
+    heure: document.getElementById('ag_heure').value,
+    heure_fin: document.getElementById('ag_heure_fin').value,
+    lieu: document.getElementById('ag_lieu').value.trim(),
+    desc: document.getElementById('ag_desc').value.trim(),
+    type: selectedType,
+    rappel: document.getElementById('ag_rappel').value,
+  };
+  if(agendaEditId){
+    Object.assign(agenda.find(x=>x.id===agendaEditId), d);
+    notify('Activité mise à jour ✓');
+  } else {
+    d.id = 'ag_'+Date.now();
+    agenda.push(d);
+    notify('Activité ajoutée ✓');
+  }
+  saveAgenda(); closeAgendaModal(); renderAgenda();
+}
+
+function deleteActivite(id){
+  if(!confirm('Supprimer cette activité ?')) return;
+  agenda = agenda.filter(x=>x.id!==id);
+  saveAgenda(); renderAgenda();
+  notify('Activité supprimée');
+}
+
+// ── EXPORT AGENDA ─────────────────────────────────────────────────────────────
+function exportAgendaCSV(){
+  if(!currentWeekStart) return;
+  const ws = dateStr(currentWeekStart);
+  const we = dateStr(addDays(currentWeekStart,6));
+  const acts = agenda.filter(a => a.date >= ws && a.date <= we);
+  if(!acts.length){ notify('Aucune activité cette semaine'); return; }
+  const bom='\uFEFF';
+  const headers=['Date','Heure','Heure fin','Type','Titre','Lieu','Description','Rappel'];
+  const rows=acts.sort((a,b)=>a.date.localeCompare(b.date)||(a.heure||'').localeCompare(b.heure||'')).map(a=>[
+    fmtLong(a.date), a.heure||'', a.heure_fin||'',
+    (ATYPE[a.type]||ATYPE.autre).label, a.titre, a.lieu||'', a.desc||'',
+    a.rappel>0?`${a.rappel} min avant`:'Aucun'
+  ]);
+  const csv=bom+[headers,...rows].map(r=>r.map(v=>`"${(v||'').toString().replace(/"/g,'""')}"`).join(';')).join('\n');
+  dlBlob(csv,'text/csv','PREMAR_Agenda_'+ws+'_'+we+'.csv');
+  notify(acts.length+' activité(s) exportée(s)');
+}
+
+// ── RAPPEL AUTO TOUTES LES MINUTES ───────────────────────────────────────────
+setInterval(checkReminders, 60000);
+
 </script>
 </body>
 </html>
