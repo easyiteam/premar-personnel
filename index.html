@@ -419,6 +419,22 @@ tbody td{padding:.62rem .9rem;font-size:.86rem;vertical-align:middle;}
   .week-label{min-width:160px;font-size:.85rem;}
 }
 
+
+/* ARCHIVES */
+.arch-stat{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:.5rem .9rem;text-align:center;}
+.arch-stat .asn{font-family:Rajdhani,sans-serif;font-size:1.4rem;font-weight:700;}
+.arch-stat .asl{font-size:.62rem;letter-spacing:1px;text-transform:uppercase;opacity:.55;}
+.arch-month-group{margin-bottom:1.5rem;}
+.arch-month-title{font-family:Rajdhani,sans-serif;font-size:.85rem;font-weight:700;letter-spacing:2px;color:#c9a227;text-transform:uppercase;padding:.5rem 0;border-bottom:1px solid rgba(201,162,39,.25);margin-bottom:.7rem;}
+.arch-row{display:flex;align-items:flex-start;gap:.8rem;padding:.55rem .7rem;border-radius:6px;border:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.02);margin-bottom:.35rem;transition:background .15s;}
+.arch-row:hover{background:rgba(255,255,255,.05);}
+.arch-row .ar-date{font-family:Rajdhani,sans-serif;font-weight:700;font-size:.78rem;color:rgba(255,255,255,.5);min-width:70px;white-space:nowrap;}
+.arch-row .ar-time{font-family:Rajdhani,sans-serif;font-weight:700;font-size:.78rem;min-width:50px;white-space:nowrap;}
+.arch-row .ar-body{flex:1;}
+.arch-row .ar-title{font-weight:600;color:#eef2f7;font-size:.86rem;}
+.arch-row .ar-sub{font-size:.74rem;color:rgba(255,255,255,.45);margin-top:.15rem;}
+.arch-row .ar-badge{padding:.1rem .45rem;border-radius:3px;font-size:.65rem;font-family:Rajdhani,sans-serif;font-weight:700;white-space:nowrap;}
+
 </style>
 </head>
 <body>
@@ -441,6 +457,7 @@ tbody td{padding:.62rem .9rem;font-size:.86rem;vertical-align:middle;}
 <div class="nav-tabs">
   <div class="nav-tab active" id="tab-personnel" onclick="switchTab('personnel')">👥 PERSONNEL</div>
   <div class="nav-tab" id="tab-agenda" onclick="switchTab('agenda')">📅 AGENDA PRÉFET <span class="tab-badge" id="agendaBadge">0</span></div>
+  <div class="nav-tab" id="tab-archives" onclick="switchTab('archives')">📂 ARCHIVES <span class="tab-badge" id="archivesBadge">0</span></div>
   <div class="nav-tab" id="tab-journal" onclick="switchTab('journal')">📋 JOURNAL QUOTIDIEN <span class="tab-badge" id="journalBadge">0</span></div>
 </div>
 
@@ -558,7 +575,10 @@ tbody td{padding:.62rem .9rem;font-size:.86rem;vertical-align:middle;}
       <button class="btn-today" onclick="goToday()">AUJOURD'HUI</button>
     </div>
     <div class="agenda-type-filter" id="typeFilter"></div>
-    <button class="btn btn-outline" onclick="exportAgendaCSV()">⬇ EXPORTER SEMAINE</button>
+    <div style="display:flex;gap:.4rem;flex-wrap:wrap;">
+      <button class="btn btn-outline" onclick="exportAgendaCSV()">⬇ SEMAINE</button>
+      <button class="btn btn-outline" style="color:#e879f9;border-color:rgba(232,121,249,.3);background:rgba(232,121,249,.08)" onclick="switchTab('archives')">📂 ARCHIVES</button>
+    </div>
   </div>
 
   <!-- Grille semainière -->
@@ -621,6 +641,36 @@ tbody td{padding:.62rem .9rem;font-size:.86rem;vertical-align:middle;}
       <button class="btn-cancel" onclick="closeAgendaModal()">ANNULER</button>
       <button class="btn-save" onclick="saveActivite()">ENREGISTRER</button>
     </div>
+  </div>
+</div>
+
+
+<!-- ═══ PAGE ARCHIVES ═══ -->
+<div class="page" id="page-archives">
+  <div style="padding:1.25rem 1.5rem;">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:1.25rem;">
+      <h2 style="font-family:Rajdhani,sans-serif;font-size:1.1rem;font-weight:700;letter-spacing:2px;color:#c9a227;text-transform:uppercase;">📂 ARCHIVES DES ACTIVITÉS</h2>
+      <div style="display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;">
+        <select id="archivePeriod" onchange="renderArchives()" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#eef2f7;padding:.42rem .75rem;border-radius:6px;font-family:Source Sans 3,sans-serif;font-size:.83rem;outline:none;">
+          <option value="week">Cette semaine</option>
+          <option value="month" selected>Ce mois</option>
+          <option value="year">Cette année</option>
+          <option value="all">Tout l'historique</option>
+        </select>
+        <input type="month" id="archiveMonth" onchange="renderArchives()" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#eef2f7;padding:.42rem .75rem;border-radius:6px;font-family:Source Sans 3,sans-serif;font-size:.83rem;outline:none;">
+        <input type="number" id="archiveYear" placeholder="Année" min="2020" max="2099" onchange="renderArchives()" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#eef2f7;padding:.42rem .75rem;border-radius:6px;font-family:Source Sans 3,sans-serif;font-size:.83rem;outline:none;width:90px;">
+      </div>
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap;">
+        <button class="btn btn-outline" onclick="downloadArchiveTxt()">⬇ RAPPORT TXT</button>
+        <button class="btn btn-outline" onclick="downloadArchiveCsv()">⬇ RAPPORT CSV</button>
+      </div>
+    </div>
+
+    <!-- Stats archive -->
+    <div id="archiveStats" style="display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.25rem;"></div>
+
+    <!-- Timeline -->
+    <div id="archiveTimeline"></div>
   </div>
 </div>
 
@@ -738,7 +788,8 @@ function switchTab(tab){
   document.getElementById('tab-'+tab).classList.add('active');
   document.getElementById('page-'+tab).classList.add('active');
   if(tab==='journal'){initJournalForm();renderJournal();}
-  if(tab==='agenda'){if(!currentWeekStart)currentWeekStart=getMondayOf(new Date());renderAgenda();}
+  if(tab==='agenda'){requestNotifPermission();if(!currentWeekStart)currentWeekStart=getMondayOf(new Date());renderAgenda();}
+  if(tab==='archives'){renderArchives();}
 }
 
 // ── SNAPSHOT BUILDER ─────────────────────────────────────────────────────────
@@ -1130,6 +1181,7 @@ const AGENDA_TYPES = [
   {key:'reunion',   label:'Réunion',        color:'#3b82f6', icon:'🤝'},
   {key:'ceremonie', label:'Cérémonie',       color:'#c9a227', icon:'🎖️'},
   {key:'visite',    label:'Visite terrain',  color:'#22c55e', icon:'🚢'},
+  {key:'atelier',   label:'Atelier',         color:'#e879f9', icon:'🛠️'},
   {key:'formation', label:'Formation',       color:'#a855f7', icon:'📚'},
   {key:'mission',   label:'Mission',         color:'#f97316', icon:'✈️'},
   {key:'audience',  label:'Audience',        color:'#3dd6f5', icon:'🏛️'},
@@ -1180,39 +1232,153 @@ function renderTypeFilter(){
 function setTypeFilter(k){ activeTypeFilter=k; renderAgenda(); }
 
 // ── REMINDERS ────────────────────────────────────────────────────────────────
+// ── SOUND ENGINE ────────────────────────────────────────────────────────────
+let audioCtx = null;
+function getAudioCtx(){ if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)(); return audioCtx; }
+function playChime(urgent){
+  try{
+    const ctx = getAudioCtx();
+    const freqs = urgent ? [880,1108,1318,1760] : [523,659,784,1046];
+    freqs.forEach((f,i)=>{
+      const osc=ctx.createOscillator(); const gain=ctx.createGain();
+      osc.type='sine'; osc.frequency.value=f;
+      gain.gain.setValueAtTime(0,ctx.currentTime+i*.18);
+      gain.gain.linearRampToValueAtTime(0.22,ctx.currentTime+i*.18+.05);
+      gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+i*.18+.4);
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.start(ctx.currentTime+i*.18); osc.stop(ctx.currentTime+i*.18+.5);
+    });
+  }catch(e){}
+}
+
+// ── POPUP NOTIFICATION ───────────────────────────────────────────────────────
+let notifPopupTimer = null;
+function showNotifPopup(items){
+  let popup = document.getElementById('notifPopup');
+  if(!popup){
+    popup = document.createElement('div');
+    popup.id='notifPopup';
+    popup.style.cssText='position:fixed;top:80px;right:1.2rem;z-index:999;display:flex;flex-direction:column;gap:.5rem;max-width:340px;';
+    document.body.appendChild(popup);
+  }
+  popup.innerHTML = items.map((item,i)=>`
+    <div class="notif-popup-card" style="
+      background:#0f1f38;border:1px solid ${item.urgent?'#ef4444':'#c9a227'};
+      border-left:4px solid ${item.urgent?'#ef4444':item.color};
+      border-radius:8px;padding:.75rem 1rem;
+      box-shadow:0 8px 30px rgba(0,0,0,.6);
+      animation:slideIn .3s ease;
+      position:relative;
+    ">
+      <div style="display:flex;align-items:flex-start;gap:.6rem;">
+        <span style="font-size:1.4rem">${item.icon}</span>
+        <div style="flex:1;">
+          <div style="font-family:Rajdhani,sans-serif;font-weight:700;font-size:.8rem;letter-spacing:1px;color:${item.urgent?'#ef4444':'#c9a227'};text-transform:uppercase;margin-bottom:.2rem;">
+            ${item.urgentLabel}
+          </div>
+          <div style="font-weight:600;color:#eef2f7;font-size:.88rem;">${item.titre}</div>
+          ${item.heure?`<div style="font-size:.78rem;color:#b8c9de;margin-top:.2rem;">🕐 ${item.heure}${item.lieu?' · 📍'+item.lieu:''}</div>`:''}
+          ${item.days>0?`<div style="font-size:.75rem;color:#b8c9de;margin-top:.15rem;">📅 ${item.dateStr}</div>`:''}
+        </div>
+        <button onclick="this.closest('.notif-popup-card').remove()" style="background:none;border:none;color:rgba(255,255,255,.3);cursor:pointer;font-size:1rem;padding:0;line-height:1;">✕</button>
+      </div>
+    </div>`).join('');
+  clearTimeout(notifPopupTimer);
+  notifPopupTimer = setTimeout(()=>{ if(popup) popup.innerHTML=''; }, 10000);
+}
+
+// ── ALERTED SET (avoid repeat alerts) ────────────────────────────────────────
+const alerted = new Set();
+
 function checkReminders(){
   const now = new Date();
   const todayS = dateStr(now);
-  const todayActs = agenda.filter(a => a.date === todayS && a.heure);
-  if(!todayActs.length){ document.getElementById('reminderBanner').classList.add('hidden'); return; }
+  const in1S = dateStr(addDays(now,1));
+  const in2S = dateStr(addDays(now,2));
 
-  const items = [];
-  todayActs.sort((a,b)=>a.heure.localeCompare(b.heure)).forEach(a => {
-    const [h,mi] = a.heure.split(':').map(Number);
-    const actTime = new Date(now); actTime.setHours(h,mi,0,0);
-    const diff = (actTime - now)/60000; // minutes
-    const rappel = parseInt(a.rappel||15);
-    const isNow = diff >= -15 && diff <= 0;
-    const isSoon = diff > 0 && diff <= rappel;
-    const isPast = diff < -15;
-    if(!isPast){
-      const t = ATYPE[a.type]||ATYPE.autre;
-      items.push(`<div class="rb-item">
-        <span class="ri-time">${a.heure}</span>
-        <span style="color:${t.color}">${t.icon}</span>
-        <span>${a.titre}${a.lieu?' — <span style="opacity:.6">'+a.lieu+'</span>':''}</span>
-        ${isNow?'<span class="ri-now">EN COURS</span>':isSoon?`<span class="ri-now" style="color:#f97316;border-color:rgba(249,115,22,.3);background:rgba(249,115,22,.1)">dans ${Math.round(diff)} min</span>`:''}
-      </div>`);
+  // All upcoming activities in next 2 days + today
+  const upcoming = agenda.filter(a => a.date >= todayS && a.date <= in2S);
+  if(!upcoming.length){ document.getElementById('reminderBanner').classList.add('hidden'); return; }
+
+  const bannerItems = [];
+  const popupItems = [];
+
+  upcoming.sort((a,b)=>a.date.localeCompare(b.date)||(a.heure||'').localeCompare(b.heure||'')).forEach(a => {
+    const t = ATYPE[a.type]||ATYPE.autre;
+    const days = (new Date(a.date) - new Date(todayS)) / 86400000; // 0=today,1=tomorrow,2=day after
+
+    let diffMin = null;
+    let isNow=false, isImminente=false, isPast=false;
+    if(a.heure && days===0){
+      const [h,mi]=a.heure.split(':').map(Number);
+      const actTime=new Date(now); actTime.setHours(h,mi,0,0);
+      diffMin=(actTime-now)/60000;
+      isNow = diffMin>=-30 && diffMin<=0;
+      isImminente = diffMin>0 && diffMin<=60;
+      isPast = diffMin<-30;
+    }
+    if(isPast) return;
+
+    // Banner line
+    let tag='';
+    if(isNow) tag=`<span class="ri-now">EN COURS</span>`;
+    else if(isImminente) tag=`<span class="ri-now" style="color:#f97316;border-color:rgba(249,115,22,.3);background:rgba(249,115,22,.1)">dans ${Math.round(diffMin)} min</span>`;
+    else if(days===0) tag=`<span class="ri-now" style="color:#3b82f6;border-color:rgba(59,130,246,.3);background:rgba(59,130,246,.1)">Aujourd'hui</span>`;
+    else if(days===1) tag=`<span class="ri-now" style="color:#a855f7;border-color:rgba(168,85,247,.3);background:rgba(168,85,247,.1)">Demain</span>`;
+    else if(days===2) tag=`<span class="ri-now" style="color:#6b7280;border-color:rgba(107,114,128,.3);background:rgba(107,114,128,.1)">Dans 2 jours</span>`;
+
+    bannerItems.push(`<div class="rb-item">
+      <span class="ri-time">${a.heure||'—'}</span>
+      <span style="color:${t.color}">${t.icon}</span>
+      <span>${a.titre}${a.lieu?' — <span style="opacity:.6">'+a.lieu+'</span>':''}</span>
+      ${tag}
+    </div>`);
+
+    // Popup + sound logic
+    const alertKey = a.id+'_'+days+'_'+(diffMin!==null?Math.floor(diffMin/5):99);
+    const shouldAlert = (
+      (isNow && !alerted.has(a.id+'_now')) ||
+      (isImminente && diffMin<=parseInt(a.rappel||15) && !alerted.has(a.id+'_soon')) ||
+      (days===1 && !alerted.has(a.id+'_1d')) ||
+      (days===2 && !alerted.has(a.id+'_2d'))
+    );
+    if(shouldAlert){
+      const urgent = isNow||isImminente;
+      let urgentLabel='';
+      if(isNow) urgentLabel='⚡ EN COURS MAINTENANT';
+      else if(isImminente) urgentLabel=`⏰ Dans ${Math.round(diffMin)} minute${diffMin>1?'s':''}`;
+      else if(days===1) urgentLabel='📅 Rappel — Demain';
+      else urgentLabel='📅 Rappel — Dans 2 jours';
+
+      popupItems.push({
+        icon:t.icon,color:t.color,titre:a.titre,heure:a.heure,
+        lieu:a.lieu,days,dateStr:fmtShort(a.date)+' '+a.date.slice(0,4),
+        urgentLabel,urgent
+      });
+      if(isNow) alerted.add(a.id+'_now');
+      else if(isImminente) alerted.add(a.id+'_soon');
+      else if(days===1) alerted.add(a.id+'_1d');
+      else alerted.add(a.id+'_2d');
+      playChime(urgent);
+      // Browser notification
+      if(Notification.permission==='granted'){
+        new Notification('PRÉMAR — '+urgentLabel,{body:a.titre+(a.lieu?' @ '+a.lieu:''),icon:''});
+      }
     }
   });
 
   const banner = document.getElementById('reminderBanner');
-  if(items.length){
+  if(bannerItems.length){
     banner.classList.remove('hidden');
-    document.getElementById('reminderItems').innerHTML = items.join('');
-  } else {
-    banner.classList.add('hidden');
-  }
+    document.getElementById('reminderItems').innerHTML=bannerItems.join('');
+  } else banner.classList.add('hidden');
+
+  if(popupItems.length) showNotifPopup(popupItems);
+}
+
+// Request notification permission on agenda tab open
+function requestNotifPermission(){
+  if(Notification.permission==='default') Notification.requestPermission();
 }
 
 // ── RENDER SEMAINIER ─────────────────────────────────────────────────────────
@@ -1368,6 +1534,151 @@ function exportAgendaCSV(){
 
 // ── RAPPEL AUTO TOUTES LES MINUTES ───────────────────────────────────────────
 setInterval(checkReminders, 60000);
+
+// ══════════════════════════════════════════
+// ARCHIVES & RAPPORTS
+// ══════════════════════════════════════════
+function getArchiveRange(){
+  const period = document.getElementById('archivePeriod').value;
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = String(now.getMonth()+1).padStart(2,'0');
+  const archMonth = document.getElementById('archiveMonth').value;
+  const archYear = parseInt(document.getElementById('archiveYear').value)||0;
+
+  if(period==='week'){
+    const mon = getMondayOf(now);
+    return {from:dateStr(mon), to:dateStr(addDays(mon,6)), label:'Semaine du '+fmtShort(dateStr(mon))+' au '+fmtShort(dateStr(addDays(mon,6)))+' '+y};
+  }
+  if(period==='month' && archMonth) return {from:archMonth+'-01', to:archMonth+'-31', label:'Mois de '+archMonth};
+  if(period==='month') return {from:y+'-'+m+'-01', to:y+'-'+m+'-31', label:'Mois de '+y+'-'+m};
+  if(period==='year' && archYear) return {from:archYear+'-01-01', to:archYear+'-12-31', label:'Année '+archYear};
+  if(period==='year') return {from:y+'-01-01', to:y+'-12-31', label:'Année '+y};
+  return {from:'2000-01-01', to:'2099-12-31', label:'Historique complet'};
+}
+
+function getArchiveActs(){
+  const {from,to}=getArchiveRange();
+  return agenda.filter(a=>a.date>=from&&a.date<=to).sort((a,b)=>a.date.localeCompare(b.date)||(a.heure||'').localeCompare(b.heure||''));
+}
+
+function renderArchives(){
+  const acts = getArchiveActs();
+  const {label} = getArchiveRange();
+  document.getElementById('archivesBadge').textContent = acts.length;
+
+  // Stats
+  const typeCounts={};
+  AGENDA_TYPES.forEach(t=>typeCounts[t.key]=0);
+  acts.forEach(a=>{if(typeCounts[a.type]!==undefined)typeCounts[a.type]++;else typeCounts.autre=(typeCounts.autre||0)+1;});
+  document.getElementById('archiveStats').innerHTML =
+    `<div class="arch-stat"><div class="asn" style="color:#c9a227">${acts.length}</div><div class="asl">Total</div></div>` +
+    AGENDA_TYPES.filter(t=>typeCounts[t.key]>0).map(t=>
+      `<div class="arch-stat"><div class="asn" style="color:${t.color}">${t.icon} ${typeCounts[t.key]}</div><div class="asl">${t.label}</div></div>`
+    ).join('');
+
+  if(!acts.length){
+    document.getElementById('archiveTimeline').innerHTML=`<div class="empty-state"><div class="icon">📭</div><p>Aucune activité sur cette période</p></div>`;
+    return;
+  }
+
+  // Group by month
+  const byMonth={};
+  acts.forEach(a=>{
+    const mk=a.date.slice(0,7);
+    if(!byMonth[mk]) byMonth[mk]=[];
+    byMonth[mk].push(a);
+  });
+  const MOIS=['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+  document.getElementById('archiveTimeline').innerHTML = Object.keys(byMonth).sort().map(mk=>{
+    const [y,mo]=mk.split('-');
+    return `<div class="arch-month-group">
+      <div class="arch-month-title">${MOIS[parseInt(mo)-1]} ${y} — ${byMonth[mk].length} activité${byMonth[mk].length>1?'s':''}</div>
+      ${byMonth[mk].map(a=>{
+        const t=ATYPE[a.type]||ATYPE.autre;
+        return `<div class="arch-row">
+          <div class="ar-date">${fmtShort(a.date)}</div>
+          <div class="ar-time" style="color:${t.color}">${t.icon} ${a.heure||'—'}</div>
+          <div class="ar-body">
+            <div class="ar-title">${a.titre}</div>
+            <div class="ar-sub">${a.lieu?'📍 '+a.lieu+' · ':''}<span class="ar-badge" style="background:${t.color}18;color:${t.color};border:1px solid ${t.color}33">${t.label}</span>${a.desc?' · '+a.desc.slice(0,60)+(a.desc.length>60?'…':''):''}</div>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>`;
+  }).join('');
+}
+
+// ── RAPPORT TXT ────────────────────────────────────────────────────────────
+function buildArchiveTxt(){
+  const acts=getArchiveActs();
+  const {label}=getArchiveRange();
+  const line='═'.repeat(62);
+  const sep='─'.repeat(62);
+  const MOIS=['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+  const typeCounts={};
+  AGENDA_TYPES.forEach(t=>typeCounts[t.key]=0);
+  acts.forEach(a=>{if(typeCounts[a.type]!==undefined)typeCounts[a.type]++;});
+
+  const lines=[
+    line,
+    '  PRÉFECTURE MARITIME DU BÉNIN',
+    "  RAPPORT D'ACTIVITÉS DU PRÉFET",
+    '  '+label.toUpperCase(),
+    line,'',
+    `  ÉTABLI LE : ${new Date().toLocaleString('fr-FR')}`,
+    `  NOMBRE TOTAL D'ACTIVITÉS : ${acts.length}`,
+    '',sep,
+    '  RÉPARTITION PAR TYPE',sep,
+    ...AGENDA_TYPES.filter(t=>typeCounts[t.key]>0).map(t=>`  ${(t.label+'  ').padEnd(22,' ')}: ${typeCounts[t.key]} activité${typeCounts[t.key]>1?'s':''}`),
+  ];
+
+  // Group by month
+  const byMonth={};
+  acts.forEach(a=>{const mk=a.date.slice(0,7);if(!byMonth[mk])byMonth[mk]=[];byMonth[mk].push(a);});
+  let secNum=1;
+  Object.keys(byMonth).sort().forEach(mk=>{
+    const [y,mo]=mk.split('-');
+    lines.push('',sep,`  ${secNum}. ${MOIS[parseInt(mo)-1].toUpperCase()} ${y}`,sep);
+    byMonth[mk].forEach(a=>{
+      const t=ATYPE[a.type]||ATYPE.autre;
+      lines.push(`  ${fmtShort(a.date).padEnd(12,' ')} ${(a.heure||'—').padEnd(7,' ')} [${t.label.padEnd(12,' ')}]  ${a.titre}`);
+      if(a.lieu)      lines.push(`  ${''.padEnd(20,' ')}Lieu : ${a.lieu}`);
+      if(a.heure_fin) lines.push(`  ${''.padEnd(20,' ')}Fin  : ${a.heure_fin}`);
+      if(a.desc)      lines.push(`  ${''.padEnd(20,' ')}Note : ${a.desc}`);
+      lines.push('');
+    });
+    secNum++;
+  });
+  lines.push(line,'  Signature du Préfet Maritime : ________________','',line);
+  return lines.join('\n');
+}
+
+function downloadArchiveTxt(){
+  const {label}=getArchiveRange();
+  const txt=buildArchiveTxt();
+  if(!getArchiveActs().length){notify('Aucune activité à exporter');return;}
+  dlBlob('\uFEFF'+txt,'text/plain;charset=utf-8','PREMAR_Rapport_Activites_'+label.replace(/ /g,'_').slice(0,30)+'.txt');
+  notify('Rapport TXT téléchargé');
+}
+function downloadArchiveCsv(){
+  const acts=getArchiveActs();
+  const {label}=getArchiveRange();
+  if(!acts.length){notify('Aucune activité à exporter');return;}
+  const bom='\uFEFF';
+  const headers=['Date','Jour','Heure','Heure fin','Type','Titre','Lieu','Description'];
+  const JOURS_FR=['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
+  const rows=acts.map(a=>[
+    fmtLong(a.date),
+    JOURS_FR[new Date(a.date+'T12:00:00').getDay()],
+    a.heure||'',a.heure_fin||'',
+    (ATYPE[a.type]||ATYPE.autre).label,
+    a.titre,a.lieu||'',a.desc||''
+  ]);
+  const csv=bom+[headers,...rows].map(r=>r.map(v=>`"${(v||'').toString().replace(/"/g,'""')}"`).join(';')).join('\n');
+  dlBlob(csv,'text/csv','PREMAR_Rapport_Activites_'+label.replace(/ /g,'_').slice(0,30)+'.csv');
+  notify(acts.length+' activité(s) exportée(s)');
+}
 
 
 // ── INIT ──────────────────────────────────────────
