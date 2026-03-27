@@ -1121,7 +1121,7 @@ function notify(msg){
 }
 
 // ── INIT ─────────────────────────────────────────────────────────────────────
-loadData();loadAgenda();renderDashboard();renderTable();
+// INIT MOVED TO END
 
 // ══════════════════════════════════════════
 // AGENDA DU PRÉFET
@@ -1369,6 +1369,9 @@ function exportAgendaCSV(){
 // ── RAPPEL AUTO TOUTES LES MINUTES ───────────────────────────────────────────
 setInterval(checkReminders, 60000);
 
+
+// ── INIT ──────────────────────────────────────────
+loadData();loadAgenda();renderDashboard();renderTable();
 </script>
 </body>
 </html>
