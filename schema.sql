@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS personnel (
   obs         TEXT,
   status      VARCHAR(20) NOT NULL DEFAULT 'present'
                 CHECK (status IN ('present','absent','permission','mission','stage','reverse')),
+  CONSTRAINT  unique_nom_personnel UNIQUE(nom),
   created_at  TIMESTAMPTZ DEFAULT NOW(),
   updated_at  TIMESTAMPTZ DEFAULT NOW()
 );
@@ -116,7 +117,7 @@ INSERT INTO personnel (grade, nom, mat, tel, fonction, armee, status) VALUES
   ('MT1',    'ADEGBITE Crédo',           '39023',        '0162017828',   'COURSIER',                                          'Marine Nationale',    'present'),
   ('MT1',    'AGBANGBE Armelle',          '37536',        '0197358624',   'SECRÉTAIRE',                                        'Marine Nationale',    'present'),
   ('MT1',    'TONOUKOUIN Christel',       '42677',        '0165665853',   'SECRÉTAIRE & ASSISTANTE DU C/CAB',                  'Marine Nationale',    'present')
-ON CONFLICT DO NOTHING;
+ON CONFLICT (nom) DO NOTHING;
 
 
 -- ─── TABLE COURRIER ─────────────────────────────────────────────
