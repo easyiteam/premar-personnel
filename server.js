@@ -326,23 +326,6 @@ app.get('/api/health', async (req, res) => {
   }
 });
 
-// ─── TOUTES LES AUTRES ROUTES → index.html ───────────────────────────────
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
-
-// ─── DÉMARRAGE ───────────────────────────────────────────────────────────
-app.listen(PORT, () => {
-  console.log(`🚀 PRÉMAR Server démarré sur le port ${PORT}`);
-  console.log(`   Mode : ${process.env.NODE_ENV || 'development'}`);
-});
-
-// ─── GESTION DES ERREURS NON CATCHÉES ────────────────────────────────────
-process.on('unhandledRejection', (reason) => {
-  console.error('Unhandled Rejection:', reason);
-});
-
-
 // ═══════════════════════════════════════════════════════════════
 // API COURRIER
 // ═══════════════════════════════════════════════════════════════
@@ -444,4 +427,20 @@ app.delete('/api/courrier/:id', async (req, res) => {
     if (!result.rows.length) return err(res, 'Courrier non trouvé', 404);
     ok(res, { deleted: req.params.id });
   } catch (e) { err(res, e.message); }
+});
+
+// ─── TOUTES LES AUTRES ROUTES → index.html ───────────────────────────────
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// ─── DÉMARRAGE ───────────────────────────────────────────────────────────
+app.listen(PORT, () => {
+  console.log(`🚀 PRÉMAR Server démarré sur le port ${PORT}`);
+  console.log(`   Mode : ${process.env.NODE_ENV || 'development'}`);
+});
+
+// ─── GESTION DES ERREURS NON CATCHÉES ────────────────────────────────────
+process.on('unhandledRejection', (reason) => {
+  console.error('Unhandled Rejection:', reason);
 });

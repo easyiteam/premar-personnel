@@ -1,7 +1,7 @@
 {
   "name": "premar-personnel",
   "version": "1.0.0",
-  "description": "Gestion du Personnel — Préfecture Maritime du Bénin",
+  "description": "Gestion Administrative — Préfecture Maritime du Bénin",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
