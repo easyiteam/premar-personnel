@@ -435,6 +435,26 @@ tbody td{padding:.62rem .9rem;font-size:.86rem;vertical-align:middle;}
 .arch-row .ar-sub{font-size:.74rem;color:rgba(255,255,255,.45);margin-top:.15rem;}
 .arch-row .ar-badge{padding:.1rem .45rem;border-radius:3px;font-size:.65rem;font-family:Rajdhani,sans-serif;font-weight:700;white-space:nowrap;}
 
+/* ── COURRIER ─────────────────────────────────────────── */
+.corr-stats{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:.75rem;}
+.corr-stat{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:7px;padding:.55rem .9rem;min-width:80px;text-align:center;}
+.corr-stat .csn{font-family:"Rajdhani",sans-serif;font-size:1.45rem;font-weight:700;line-height:1;}
+.corr-stat .csl{font-size:.58rem;letter-spacing:1.5px;text-transform:uppercase;opacity:.55;margin-top:2px;}
+.corr-type-arr{background:rgba(34,197,94,.12);color:#22c55e;border:1px solid rgba(34,197,94,.3);padding:.1rem .45rem;border-radius:4px;font-size:.67rem;font-family:"Rajdhani",sans-serif;font-weight:700;letter-spacing:.8px;white-space:nowrap;}
+.corr-type-dep{background:rgba(59,130,246,.12);color:#3b82f6;border:1px solid rgba(59,130,246,.3);padding:.1rem .45rem;border-radius:4px;font-size:.67rem;font-family:"Rajdhani",sans-serif;font-weight:700;letter-spacing:.8px;white-space:nowrap;}
+.prio-normale{background:rgba(255,255,255,.06);color:rgba(255,255,255,.45);border:1px solid rgba(255,255,255,.12);padding:.1rem .4rem;border-radius:4px;font-size:.64rem;font-family:"Rajdhani",sans-serif;font-weight:700;}
+.prio-urgente{background:rgba(239,68,68,.14);color:#ef4444;border:1px solid rgba(239,68,68,.3);padding:.1rem .4rem;border-radius:4px;font-size:.64rem;font-family:"Rajdhani",sans-serif;font-weight:700;}
+.prio-confidentielle{background:rgba(168,85,247,.14);color:#a855f7;border:1px solid rgba(168,85,247,.3);padding:.1rem .4rem;border-radius:4px;font-size:.64rem;font-family:"Rajdhani",sans-serif;font-weight:700;}
+.cst-select{background:none;border:none;cursor:pointer;font-family:"Rajdhani",sans-serif;font-weight:700;font-size:.7rem;padding:.18rem .4rem;border-radius:20px;outline:none;}
+.cst-recu .cst-select{background:rgba(61,214,245,.1);color:#3dd6f5;border:1px solid rgba(61,214,245,.25);}
+.cst-en_cours .cst-select{background:rgba(249,115,22,.12);color:#f97316;border:1px solid rgba(249,115,22,.3);}
+.cst-traite .cst-select{background:rgba(34,197,94,.12);color:#22c55e;border:1px solid rgba(34,197,94,.3);}
+.cst-archive .cst-select{background:rgba(107,114,128,.1);color:#6b7280;border:1px solid rgba(107,114,128,.25);}
+.cst-envoye .cst-select{background:rgba(59,130,246,.12);color:#3b82f6;border:1px solid rgba(59,130,246,.3);}
+.cst-brouillon .cst-select{background:rgba(201,162,39,.1);color:var(--gold);border:1px solid rgba(201,162,39,.25);}
+.corr-urgents-banner{margin:0 0 .75rem;background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.25);border-radius:8px;padding:.7rem 1rem;display:flex;align-items:flex-start;gap:.8rem;}
+.corr-urgents-banner.hidden{display:none;}
+
 </style>
 </head>
 <body>
@@ -459,6 +479,7 @@ tbody td{padding:.62rem .9rem;font-size:.86rem;vertical-align:middle;}
   <div class="nav-tab" id="tab-agenda" onclick="switchTab('agenda')">📅 AGENDA PRÉFET <span class="tab-badge" id="agendaBadge">0</span></div>
   <div class="nav-tab" id="tab-archives" onclick="switchTab('archives')">📂 ARCHIVES <span class="tab-badge" id="archivesBadge">0</span></div>
   <div class="nav-tab" id="tab-journal" onclick="switchTab('journal')">📋 JOURNAL QUOTIDIEN <span class="tab-badge" id="journalBadge">0</span></div>
+  <div class="nav-tab" id="tab-courrier" onclick="switchTab('courrier')">✉️ COURRIER <span class="tab-badge" id="courrierBadge"></span></div>
 </div>
 
 <!-- DASHBOARD (shared) -->
@@ -561,7 +582,7 @@ tbody td{padding:.62rem .9rem;font-size:.86rem;vertical-align:middle;}
   <div class="reminder-banner hidden" id="reminderBanner">
     <div class="rb-icon">🔔</div>
     <div class="rb-content">
-      <div class="rb-title">Rappels — Activités du Préfet aujourd'hui</div>
+      <div class="rb-title">Rappels — Activités des 48 prochaines heures</div>
       <div class="rb-items" id="reminderItems"></div>
     </div>
   </div>
@@ -633,6 +654,7 @@ tbody td{padding:.62rem .9rem;font-size:.86rem;vertical-align:middle;}
             <option value="60">1 heure avant</option>
             <option value="120">2 heures avant</option>
             <option value="1440">La veille</option>
+            <option value="2880">2 jours avant</option>
           </select>
         </div>
       </div>
@@ -640,6 +662,78 @@ tbody td{padding:.62rem .9rem;font-size:.86rem;vertical-align:middle;}
     <div class="modal-footer">
       <button class="btn-cancel" onclick="closeAgendaModal()">ANNULER</button>
       <button class="btn-save" onclick="saveActivite()">ENREGISTRER</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- MODAL COURRIER -->
+<div class="modal-overlay" id="courrierModalOverlay" style="display:none" onclick="closeCourrierModal()">
+  <div class="modal" onclick="event.stopPropagation()" style="max-width:540px;">
+    <div class="modal-header">
+      <h3 id="courrierModalTitle">NOUVEAU COURRIER</h3>
+      <button class="btn-close" onclick="closeCourrierModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Type *</label>
+          <select id="corr_type" onchange="updateCourrierStatutOptions()">
+            <option value="arrivee">📥 Courrier arrivée</option>
+            <option value="depart">📤 Courrier départ</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Date *</label>
+          <input type="date" id="corr_date">
+        </div>
+        <div class="form-group">
+          <label>Numéro</label>
+          <input type="text" id="corr_numero" placeholder="N° d'enregistrement">
+        </div>
+        <div class="form-group">
+          <label>Référence</label>
+          <input type="text" id="corr_reference" placeholder="Référence interne">
+        </div>
+        <div class="form-group full">
+          <label>Expéditeur</label>
+          <input type="text" id="corr_expediteur" placeholder="Nom / Organisme expéditeur">
+        </div>
+        <div class="form-group full">
+          <label>Destinataire</label>
+          <input type="text" id="corr_destinataire" placeholder="Nom / Organisme destinataire">
+        </div>
+        <div class="form-group full">
+          <label>Objet *</label>
+          <input type="text" id="corr_objet" placeholder="Objet du courrier">
+        </div>
+        <div class="form-group">
+          <label>Priorité</label>
+          <select id="corr_priorite">
+            <option value="normale">Normale</option>
+            <option value="urgente">⚡ Urgente</option>
+            <option value="confidentielle">🔒 Confidentielle</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Statut</label>
+          <select id="corr_statut"></select>
+        </div>
+        <div class="form-group full">
+          <label>Agent affecté</label>
+          <select id="corr_personnel">
+            <option value="">— Non affecté —</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label>Notes / Instructions</label>
+          <textarea class="rf-textarea" id="corr_notes" placeholder="Observations, instructions de traitement…" style="min-height:60px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:.5rem .75rem;color:#eef2f7;font-family:'Source Sans 3',sans-serif;font-size:.88rem;outline:none;resize:vertical;width:100%;"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeCourrierModal()">ANNULER</button>
+      <button class="btn-save" onclick="saveCourrier()">ENREGISTRER</button>
     </div>
   </div>
 </div>
@@ -673,6 +767,75 @@ tbody td{padding:.62rem .9rem;font-size:.86rem;vertical-align:middle;}
     <div id="archiveTimeline"></div>
   </div>
 </div>
+
+<!-- ═══ PAGE COURRIER ═══ -->
+<div class="page" id="page-courrier">
+  <div style="padding:1.25rem 1.5rem 0;">
+
+    <!-- Bannière urgents / non traités -->
+    <div class="corr-urgents-banner hidden" id="courrierNotifBanner">
+      <div class="rb-icon">⚠️</div>
+      <div class="rb-content">
+        <div class="rb-title" style="color:#ef4444;">Courriers urgents / non traités</div>
+        <div class="rb-items" id="courrierNotifItems"></div>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="corr-stats" id="courrierStats"></div>
+
+    <!-- Toolbar -->
+    <div class="toolbar" style="margin:0 -1.5rem;padding:.65rem 1.5rem;">
+      <div class="search-box">
+        <span style="opacity:.4">🔍</span>
+        <input type="text" id="corrSearch" placeholder="Objet, référence, expéditeur…" oninput="renderCourrier()">
+      </div>
+      <select class="fsel" id="corrFilterType" onchange="renderCourrier()">
+        <option value="">Tous types</option>
+        <option value="arrivee">📥 Arrivée</option>
+        <option value="depart">📤 Départ</option>
+      </select>
+      <select class="fsel" id="corrFilterStatut" onchange="renderCourrier()">
+        <option value="">Tous statuts</option>
+        <option value="recu">Reçu</option>
+        <option value="en_cours">En cours</option>
+        <option value="traite">Traité</option>
+        <option value="envoye">Envoyé</option>
+        <option value="brouillon">Brouillon</option>
+        <option value="archive">Archivé</option>
+      </select>
+      <select class="fsel" id="corrFilterPrio" onchange="renderCourrier()">
+        <option value="">Toutes priorités</option>
+        <option value="urgente">⚡ Urgente</option>
+        <option value="normale">Normale</option>
+        <option value="confidentielle">🔒 Confidentielle</option>
+      </select>
+      <button class="btn btn-gold" onclick="openCourrierModal()">+ COURRIER</button>
+    </div>
+
+    <!-- Table -->
+    <div class="table-wrap" style="margin-top:.75rem;">
+      <table>
+        <thead>
+          <tr>
+            <th>TYPE</th>
+            <th>N° / RÉF.</th>
+            <th>DATE</th>
+            <th>EXPÉDITEUR / DESTINATAIRE</th>
+            <th>OBJET</th>
+            <th>PRIORITÉ</th>
+            <th>STATUT</th>
+            <th>AGENT AFFECTÉ</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="courrierTbody"></tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
 
 <!-- MODAL AGENT -->
 <div class="modal-overlay" id="modalOverlay" style="display:none" onclick="handleOverlayClick(event)">
@@ -715,6 +878,61 @@ tbody td{padding:.62rem .9rem;font-size:.86rem;vertical-align:middle;}
 <div class="notif" id="notif" style="display:none"></div>
 
 <script>
+
+// ══════════════════════════════════════════════════════
+// COUCHE API — Remplace localStorage par PostgreSQL
+// ══════════════════════════════════════════════════════
+const API = {
+  async get(url) {
+    const r = await fetch(url); const d = await r.json();
+    if (!d.success) throw new Error(d.error||'Erreur API');
+    return d.data;
+  },
+  async post(url, body) {
+    const r = await fetch(url, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    const d = await r.json();
+    if (!d.success) throw new Error(d.error||'Erreur API');
+    return d.data;
+  },
+  async put(url, body) {
+    const r = await fetch(url, {method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    const d = await r.json();
+    if (!d.success) throw new Error(d.error||'Erreur API');
+    return d.data;
+  },
+  async patch(url, body) {
+    const r = await fetch(url, {method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    const d = await r.json();
+    if (!d.success) throw new Error(d.error||'Erreur API');
+    return d.data;
+  },
+  async del(url) {
+    const r = await fetch(url, {method:'DELETE'});
+    const d = await r.json();
+    if (!d.success) throw new Error(d.error||'Erreur API');
+    return d.data;
+  }
+};
+
+// ── Spinner global ──────────────────────────────────────────
+function showLoader(msg='Chargement…'){
+  let el=document.getElementById('globalLoader');
+  if(!el){
+    el=document.createElement('div');
+    el.id='globalLoader';
+    el.style.cssText='position:fixed;bottom:1.5rem;left:1.5rem;background:#112240;border:1px solid rgba(201,162,39,.4);color:#c9a227;padding:.55rem 1rem;border-radius:7px;font-family:Rajdhani,sans-serif;font-weight:700;font-size:.82rem;letter-spacing:1px;z-index:400;display:flex;align-items:center;gap:.5rem;';
+    document.body.appendChild(el);
+  }
+  el.innerHTML='<span style="animation:spin 1s linear infinite;display:inline-block">⟳</span> '+msg;
+  el.style.display='flex';
+}
+function hideLoader(){ const el=document.getElementById('globalLoader'); if(el) el.style.display='none'; }
+
+// CSS for spin
+const spinStyle=document.createElement('style');
+spinStyle.textContent='@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}';
+document.head.appendChild(spinStyle);
+
 // ── CONSTANTS ──────────────────────────────────────────────────────────────
 const STATUSES=['present','absent','permission','mission','stage','reverse'];
 const STATUS_LABELS={present:'PRÉSENT',absent:'ABSENT',permission:'PERMISSION',mission:'MISSION',stage:'STAGE',reverse:'REVERSÉ'};
@@ -771,14 +989,31 @@ let personnel=[],journal=[],editingId=null,selectedStatus='present',groupByArmee
 let currentTab='personnel';
 
 // ── STORAGE ─────────────────────────────────────────────────────────────────
-function loadData(){
-  try{const s=localStorage.getItem('premar_v4');personnel=s?JSON.parse(s):JSON.parse(JSON.stringify(DEFAULT_DATA));if(!s)savePersonnel();}
-  catch(e){personnel=JSON.parse(JSON.stringify(DEFAULT_DATA));}
-  try{const j=localStorage.getItem('premar_journal_v1');journal=j?JSON.parse(j):[];}
-  catch(e){journal=[];}
+async function loadData(){
+  try{
+    showLoader('Chargement du personnel…');
+    personnel = await API.get('/api/personnel');
+    hideLoader();
+  }catch(e){
+    hideLoader();
+    console.error('loadData error:', e);
+    notify('⚠️ Erreur chargement : '+e.message);
+    personnel = [];
+  }
 }
-function savePersonnel(){try{localStorage.setItem('premar_v4',JSON.stringify(personnel));}catch(e){}}
-function saveJournal(){try{localStorage.setItem('premar_journal_v1',JSON.stringify(journal));}catch(e){}}
+async function loadAgendaData(){
+  try{
+    const data = await API.get('/api/agenda');
+    // normalize field names from DB (date_acti, type_acti) to frontend (date, type)
+    agenda = data.map(a=>({...a, date:(a.date_acti||a.date||'').slice(0,10), type:a.type_acti||a.type}));
+  }catch(e){ agenda=[]; console.error(e); }
+}
+async function savePersonnel(){
+  // no-op: saves are done immediately via API on each action
+}
+async function saveJournal(){
+  // no-op: saves are done immediately via API on each action
+}
 
 // ── TAB SWITCH ───────────────────────────────────────────────────────────────
 function switchTab(tab){
@@ -787,9 +1022,9 @@ function switchTab(tab){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById('tab-'+tab).classList.add('active');
   document.getElementById('page-'+tab).classList.add('active');
-  if(tab==='journal'){initJournalForm();renderJournal();}
+  if(tab==='journal'){initJournalForm();loadJournalAndRender();}
   if(tab==='agenda'){requestNotifPermission();if(!currentWeekStart)currentWeekStart=getMondayOf(new Date());renderAgenda();}
-  if(tab==='archives'){renderArchives();}
+  if(tab==='archives'){loadAgendaAndArchives();}
 }
 
 // ── SNAPSHOT BUILDER ─────────────────────────────────────────────────────────
@@ -854,7 +1089,7 @@ function renderRow(p,idx){
     <td class="td-tel">${p.tel||'—'}</td>
     <td class="td-fonction">${p.fonction||'—'}</td>
     <td><span class="armee-badge ${a.cls}">${p.armee}</span></td>
-    <td><span class="status-badge st-${p.status}" onclick="quickStatus(${p.id})" title="Cliquer pour changer">${STATUS_DOT[p.status]} ${STATUS_LABELS[p.status]}</span></td>
+    <td><span class="status-badge st-${p.status} cursor-pointer" data-status-id="${p.id}" onclick="quickStatus(${p.id})" title="Cliquer pour choisir">${STATUS_DOT[p.status]} ${STATUS_LABELS[p.status]}</span></td>
     <td class="td-actions">
       <button class="btn-edit" onclick="openModal(${p.id})">✏️</button>
       <button class="btn-del" onclick="deleteAgent(${p.id})">🗑️</button>
@@ -889,14 +1124,75 @@ function updateExportBar(filtered){
   } else bar.style.display='none';
 }
 function quickStatus(id){
-  const p=personnel.find(x=>x.id===id);if(!p)return;
-  p.status=STATUSES[(STATUSES.indexOf(p.status)+1)%STATUSES.length];
-  savePersonnel();renderTable();notify(`${p.nom} → ${STATUS_LABELS[p.status]}`);
+  // Fermer tout popup existant
+  document.querySelectorAll('.status-popup').forEach(el => el.remove());
+
+  const p = personnel.find(x => x.id === id);
+  if (!p) return;
+
+  const badge = document.querySelector(`[data-status-id="${id}"]`);
+  if (!badge) return;
+
+  // Créer le popup
+  const popup = document.createElement('div');
+  popup.className = 'status-popup';
+  popup.style.cssText = `
+    position:absolute; z-index:500;
+    background:#0f1f38; border:1px solid rgba(201,162,39,.4);
+    border-radius:8px; padding:.4rem;
+    box-shadow:0 8px 30px rgba(0,0,0,.6);
+    display:flex; flex-direction:column; gap:.25rem;
+    min-width:150px;
+  `;
+
+  const rect = badge.getBoundingClientRect();
+  popup.style.top  = (rect.bottom + window.scrollY + 4) + 'px';
+  popup.style.left = (rect.left + window.scrollX) + 'px';
+
+  const colors = {
+    present:'#22c55e', absent:'#ef4444', permission:'#f97316',
+    mission:'#3b82f6', stage:'#a855f7', reverse:'#6b7280'
+  };
+
+  STATUSES.forEach(s => {
+    const btn = document.createElement('button');
+    btn.style.cssText = `
+      background:${s === p.status ? colors[s]+'22' : 'transparent'};
+      color:${colors[s]}; border:1px solid ${s === p.status ? colors[s]+'66' : 'transparent'};
+      border-radius:5px; padding:.35rem .7rem; cursor:pointer;
+      font-family:Rajdhani,sans-serif; font-weight:700; font-size:.78rem;
+      letter-spacing:.8px; text-align:left; transition:background .15s;
+    `;
+    btn.textContent = STATUS_DOT[s] + ' ' + STATUS_LABELS[s];
+    btn.onmouseover = () => btn.style.background = colors[s]+'22';
+    btn.onmouseout  = () => btn.style.background = s === p.status ? colors[s]+'22' : 'transparent';
+    btn.onclick = async (e) => {
+      e.stopPropagation();
+      popup.remove();
+      if (s === p.status) return;
+      if (!IS_SERVER) {
+        p.status = s; LOCAL.savePersonnel(personnel); renderTable();
+        notify(p.nom + ' → ' + STATUS_LABELS[s]); return;
+      }
+      try {
+        await API.patch('/api/personnel/' + id + '/status', {status: s});
+        p.status = s; renderTable(); notify(p.nom + ' → ' + STATUS_LABELS[s]);
+      } catch(err) { notify('⚠️ ' + err.message); }
+    };
+    popup.appendChild(btn);
+  });
+
+  document.body.appendChild(popup);
+  setTimeout(() => document.addEventListener('click', () => popup.remove(), {once: true}), 50);
 }
-function deleteAgent(id){
+async function deleteAgent(id){
   const p=personnel.find(x=>x.id===id);
-  if(!p||!confirm(`Supprimer ${p.nom} ?`))return;
-  personnel=personnel.filter(x=>x.id!==id);savePersonnel();renderTable();notify('Agent supprimé');
+  if(!p||!confirm('Supprimer '+p.nom+' ?'))return;
+  try{
+    await API.del('/api/personnel/'+id);
+    personnel=personnel.filter(x=>x.id!==id);
+    renderTable();notify('Agent supprimé');
+  }catch(e){ notify('⚠️ '+e.message); }
 }
 function toggleGroup(){groupByArmee=!groupByArmee;document.getElementById('groupBtn').classList.toggle('active',groupByArmee);renderTable();}
 
@@ -922,14 +1218,32 @@ function openModal(id){
 }
 function closeModal(){document.getElementById('modalOverlay').style.display='none';}
 function handleOverlayClick(e){if(e.target===document.getElementById('modalOverlay'))closeModal();}
-function saveAgent(){
-  const nom=document.getElementById('f_nom').value.trim();if(!nom){alert('Le nom est obligatoire.');return;}
-  const d={grade:document.getElementById('f_grade').value.trim(),nom,mat:document.getElementById('f_mat').value.trim(),
-    tel:document.getElementById('f_tel').value.trim(),armee:document.getElementById('f_armee').value,
-    fonction:document.getElementById('f_fonction').value.trim(),obs:document.getElementById('f_obs').value.trim(),status:selectedStatus};
-  if(editingId){Object.assign(personnel.find(x=>x.id===editingId),d);notify('Agent mis à jour ✓');}
-  else{const newId=Math.max(0,...personnel.map(x=>x.id))+1;personnel.push({id:newId,...d});notify('Agent ajouté ✓');}
-  savePersonnel();closeModal();renderTable();
+async function saveAgent(){
+  const nom=document.getElementById('f_nom').value.trim();
+  if(!nom){alert('Le nom est obligatoire.');return;}
+  const d={
+    grade:document.getElementById('f_grade').value.trim(), nom,
+    mat:document.getElementById('f_mat').value.trim(),
+    tel:document.getElementById('f_tel').value.trim(),
+    armee:document.getElementById('f_armee').value,
+    fonction:document.getElementById('f_fonction').value.trim(),
+    obs:document.getElementById('f_obs').value.trim(),
+    status:selectedStatus
+  };
+  try{
+    showLoader(editingId?'Mise à jour…':'Ajout…');
+    if(editingId){
+      const updated=await API.put('/api/personnel/'+editingId, d);
+      const idx=personnel.findIndex(x=>x.id==editingId);
+      if(idx>=0) personnel[idx]={...personnel[idx],...updated};
+      notify('Agent mis à jour ✓');
+    } else {
+      const created=await API.post('/api/personnel', d);
+      personnel.push(created);
+      notify('Agent ajouté ✓');
+    }
+    hideLoader();closeModal();renderTable();
+  }catch(e){ hideLoader();notify('⚠️ '+e.message); }
 }
 
 // ── EXPORT PERSONNEL CSV ─────────────────────────────────────────────────────
@@ -982,17 +1296,35 @@ function getRapportFields(){
   };
 }
 
-function saveRapport(){
+async function saveRapport(){
   const r=getRapportFields();
   if(!r.redacteur){alert('Veuillez indiquer le nom du rédacteur.');return;}
-  // Replace existing entry for today or add new
-  const idx=journal.findIndex(j=>j.date===r.date);
-  if(idx>=0){if(!confirm('Un rapport existe déjà pour aujourd\'hui. Voulez-vous le remplacer ?'))return;journal[idx]=r;}
-  else journal.unshift(r);
-  saveJournal();renderJournal();renderDashboard();
-  notify('Rapport du '+todayFr()+' enregistré ✓');
-  // Clear form
-  ['rfRedacteur','rfActivites','rfMouvements','rfIncidents','rfDirectives'].forEach(i=>document.getElementById(i).value='');
+  try{
+    showLoader('Enregistrement du rapport…');
+    const saved=await API.post('/api/journal',{
+      date_rapport:r.date, redacteur:r.redacteur, heure:r.heure,
+      activites:r.activites, mouvements:r.mouvements,
+      incidents:r.incidents, directives:r.directives,
+      snapshot:r.snapshot
+    });
+    hideLoader();
+    // Refresh journal list
+    const data=await API.get('/api/journal');
+    journal=data.map(j=>({...j,date:j.date_rapport||j.date}));
+    renderJournal();renderDashboard();
+    notify('Rapport du '+todayFr()+' enregistré ✓');
+    ['rfRedacteur','rfActivites','rfMouvements','rfIncidents','rfDirectives'].forEach(i=>document.getElementById(i).value='');
+  }catch(e){ hideLoader();notify('⚠️ '+e.message); }
+}
+
+async function loadJournalAndRender(){
+  try{
+    showLoader('Chargement du journal…');
+    const data = await API.get('/api/journal');
+    journal = data.map(j=>({...j, date:j.date_rapport instanceof Date ? j.date_rapport.toISOString().slice(0,10) : (j.date_rapport||j.date||'').slice(0,10)}));
+    hideLoader();
+    renderJournal();
+  }catch(e){ hideLoader(); notify('⚠️ '+e.message); }
 }
 
 function renderJournal(){
@@ -1044,12 +1376,15 @@ function toggleEntry(i){
   const b=document.getElementById('entry-'+i);
   b.classList.toggle('open');
 }
-function deleteRapport(i){
+async function deleteRapport(i){
   if(!confirm('Supprimer ce rapport ?'))return;
-  const visible=document.getElementById('filterMonth').value?journal.filter(j=>j.date.startsWith(document.getElementById('filterMonth').value)):journal;
+  const visible=document.getElementById('filterMonth').value?journal.filter(j=>(j.date||j.date_rapport||'').startsWith(document.getElementById('filterMonth').value)):journal;
   const r=visible[i];
-  journal=journal.filter(x=>x!==r);
-  saveJournal();renderJournal();renderDashboard();notify('Rapport supprimé');
+  try{
+    await API.del('/api/journal/'+r.id);
+    journal=journal.filter(x=>x.id!==r.id);
+    renderJournal();renderDashboard();notify('Rapport supprimé');
+  }catch(e){ notify('⚠️ '+e.message); }
 }
 
 // ── DOWNLOAD RAPPORT ─────────────────────────────────────────────────────────
@@ -1198,11 +1533,9 @@ let selectedType = 'reunion';
 let activeTypeFilter = '';
 let reminderTimer = null;
 
-function loadAgenda(){
-  try{ const a = localStorage.getItem('premar_agenda_v1'); agenda = a ? JSON.parse(a) : []; }
-  catch(e){ agenda = []; }
-}
-function saveAgenda(){ try{ localStorage.setItem('premar_agenda_v1', JSON.stringify(agenda)); }catch(e){} }
+// loadAgenda is now loadAgendaData() - see API layer above
+function loadAgenda(){ /* replaced by loadAgendaData() */ }
+function saveAgenda(){ /* no-op - saves done via API */ }
 
 // ── WEEK UTILITIES ───────────────────────────────────────────────────────────
 function getMondayOf(d){
@@ -1213,7 +1546,11 @@ function getMondayOf(d){
   dt.setHours(0,0,0,0);
   return dt;
 }
-function dateStr(d){ return d.toISOString().slice(0,10); }
+function dateStr(d){
+  return d.getFullYear()+'-'+
+    String(d.getMonth()+1).padStart(2,'0')+'-'+
+    String(d.getDate()).padStart(2,'0');
+}
 function addDays(d,n){ const r=new Date(d); r.setDate(r.getDate()+n); return r; }
 function fmtShort(d){ const [y,mo,j]=d.split('-'); const M=['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc']; return `${parseInt(j)} ${M[parseInt(mo)-1]}`; }
 function fmtLong(d){ const [y,mo,j]=d.split('-'); const M=['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre']; return `${parseInt(j)} ${M[parseInt(mo)-1]} ${y}`; }
@@ -1336,11 +1673,12 @@ function checkReminders(){
 
     // Popup + sound logic
     const alertKey = a.id+'_'+days+'_'+(diffMin!==null?Math.floor(diffMin/5):99);
+    const rappelMin = parseInt(a.rappel||0);
     const shouldAlert = (
       (isNow && !alerted.has(a.id+'_now')) ||
-      (isImminente && diffMin<=parseInt(a.rappel||15) && !alerted.has(a.id+'_soon')) ||
-      (days===1 && !alerted.has(a.id+'_1d')) ||
-      (days===2 && !alerted.has(a.id+'_2d'))
+      (isImminente && rappelMin>0 && diffMin<=rappelMin && !alerted.has(a.id+'_soon')) ||
+      (days===1 && rappelMin>=1440 && !alerted.has(a.id+'_1d')) ||
+      (days===2 && rappelMin>=2880 && !alerted.has(a.id+'_2d'))
     );
     if(shouldAlert){
       const urgent = isNow||isImminente;
@@ -1483,34 +1821,57 @@ function openAgendaModal(date, id){
 }
 function closeAgendaModal(){ document.getElementById('agendaModalOverlay').style.display='none'; }
 
-function saveActivite(){
+async function saveActivite(){
   const titre = document.getElementById('ag_titre').value.trim();
   if(!titre){ alert('Le titre est obligatoire.'); return; }
-  const d = {
-    titre, date: document.getElementById('ag_date').value || agendaTargetDate,
-    heure: document.getElementById('ag_heure').value,
-    heure_fin: document.getElementById('ag_heure_fin').value,
-    lieu: document.getElementById('ag_lieu').value.trim(),
-    desc: document.getElementById('ag_desc').value.trim(),
-    type: selectedType,
-    rappel: document.getElementById('ag_rappel').value,
-  };
-  if(agendaEditId){
-    Object.assign(agenda.find(x=>x.id===agendaEditId), d);
-    notify('Activité mise à jour ✓');
-  } else {
-    d.id = 'ag_'+Date.now();
-    agenda.push(d);
-    notify('Activité ajoutée ✓');
+  // Validation même jour : au moins 1h à l'avance
+  const selDate = (document.getElementById('ag_date').value || agendaTargetDate || '').slice(0,10);
+  const todayLocal = dateStr(new Date());
+  if(selDate === todayLocal){
+    const heureVal = document.getElementById('ag_heure').value;
+    if(heureVal){
+      const [hh,mm] = heureVal.split(':').map(Number);
+      const actTime = new Date(); actTime.setHours(hh,mm,0,0);
+      if((actTime - new Date()) < 3600000){
+        alert("Les activités du jour doivent être planifiées au moins 1 heure à l'avance."); return;
+      }
+    }
   }
-  saveAgenda(); closeAgendaModal(); renderAgenda();
+  const d = {
+    titre,
+    date_acti: (document.getElementById('ag_date').value || agendaTargetDate || '').slice(0, 10),
+    heure: document.getElementById('ag_heure').value||null,
+    heure_fin: document.getElementById('ag_heure_fin').value||null,
+    lieu: document.getElementById('ag_lieu').value.trim(),
+    description: document.getElementById('ag_desc').value.trim(),
+    type_acti: selectedType,
+    rappel: parseInt(document.getElementById('ag_rappel').value)||15,
+  };
+  try{
+    showLoader(agendaEditId?'Mise à jour…':'Enregistrement…');
+    if(agendaEditId){
+      const updated=await API.put('/api/agenda/'+agendaEditId, d);
+      const norm={...updated, date:(updated.date_acti||'').slice(0,10), type:updated.type_acti, desc:updated.description};
+      const idx=agenda.findIndex(x=>x.id===agendaEditId);
+      if(idx>=0) agenda[idx]=norm;
+      notify('Activité mise à jour ✓');
+    } else {
+      const created=await API.post('/api/agenda', d);
+      const norm={...created, date:(created.date_acti||'').slice(0,10), type:created.type_acti, desc:created.description};
+      agenda.push(norm);
+      notify('Activité ajoutée ✓');
+    }
+    hideLoader(); closeAgendaModal(); renderAgenda();
+  }catch(e){ hideLoader(); notify('⚠️ '+e.message); }
 }
 
-function deleteActivite(id){
+async function deleteActivite(id){
   if(!confirm('Supprimer cette activité ?')) return;
-  agenda = agenda.filter(x=>x.id!==id);
-  saveAgenda(); renderAgenda();
-  notify('Activité supprimée');
+  try{
+    await API.del('/api/agenda/'+id);
+    agenda=agenda.filter(x=>x.id!==id);
+    renderAgenda(); notify('Activité supprimée');
+  }catch(e){ notify('⚠️ '+e.message); }
 }
 
 // ── EXPORT AGENDA ─────────────────────────────────────────────────────────────
@@ -1560,6 +1921,20 @@ function getArchiveRange(){
 function getArchiveActs(){
   const {from,to}=getArchiveRange();
   return agenda.filter(a=>a.date>=from&&a.date<=to).sort((a,b)=>a.date.localeCompare(b.date)||(a.heure||'').localeCompare(b.heure||''));
+}
+
+async function loadAgendaAndArchives(){
+  try{
+    showLoader('Chargement des archives…');
+    const data = await API.get('/api/agenda');
+    agenda = data.map(a=>({
+      ...a,
+      date: (a.date_acti||a.date||'').slice(0,10),  // garde YYYY-MM-DD brut
+      type: a.type_acti||a.type,
+      desc: a.description||a.desc
+    }));
+    hideLoader(); renderArchives();
+  }catch(e){ hideLoader(); notify('⚠️ '+e.message); }
 }
 
 function renderArchives(){
@@ -1682,7 +2057,16 @@ function downloadArchiveCsv(){
 
 
 // ── INIT ──────────────────────────────────────────
-loadData();loadAgenda();renderDashboard();renderTable();
+async function init(){
+  showLoader('Initialisation…');
+  await loadData();
+  await loadAgendaData();
+  // journal loaded on demand when tab opened
+  hideLoader();
+  renderDashboard();
+  renderTable();
+}
+init();
 </script>
 </body>
 </html>
